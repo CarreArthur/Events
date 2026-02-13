@@ -5,7 +5,16 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationController; // ✅ AJOUTE ÇA
 
 Route::get('/', function () {
-    return view('welcome');
+    $latestEvents = \App\Models\Event::where('is_public', true)
+        ->orderBy('date_start', 'desc')
+        ->limit(3)
+        ->get();
+    
+    return view('welcome', [
+        'latestEvents' => $latestEvents,
+        'totalEvents' => \App\Models\Event::where('is_public', true)->count(),
+        'totalRegistrations' => \App\Models\Registration::count(),
+    ]);
 });
 
 Route::get('/events', [EventController::class, 'index'])->name('events.index');

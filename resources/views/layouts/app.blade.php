@@ -20,7 +20,7 @@
             <nav class="flex items-center gap-12 text-sm font-medium">
                 <a href="{{ url('/') }}" class="text-gray-700 hover:text-black transition">Accueil</a>
                 <a href="{{ url('/events') }}" class="text-gray-700 hover:text-black transition">Événements</a>
-                <a href="{{ url('/admin') }}" class="text-gray-700 hover:text-black transition">Admin</a>
+                <a href="{{ url('/admin') }}" class="text-gray-500 hover:text-gray-700 text-xs transition">Admin</a>
             </nav>
         </div>
     </header>
