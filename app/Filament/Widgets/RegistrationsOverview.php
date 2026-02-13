@@ -12,6 +12,7 @@ class RegistrationsOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         $user = auth()->user();
+        $now = now();
 
         $eventsQuery = Event::query();
         $registrationsQuery = Registration::query()->where('status', 'REGISTERED');
@@ -26,14 +27,49 @@ class RegistrationsOverview extends StatsOverviewWidget
         $usedSeats = (clone $registrationsQuery)->where('is_attending', true)->count();
         $totalCapacity = (clone $eventsQuery)->whereNotNull('max_participants')->sum('max_participants');
 
-        $fillRate = $totalCapacity > 0
-            ? round(($usedSeats / $totalCapacity) * 100)
-            : null;
-
-        return [
-            Stat::make('Evenements', $totalEvents),
-            Stat::make('Inscriptions', $totalRegistrations),
-            Stat::make('Taux de remplissage', $fillRate === null ? '-' : $fillRate . ' %'),
+        $stats = [
+            Stat::make('Evenements', $totalEvents)
+                ->color('info'),
+            Stat::make('Inscriptions', $totalRegistrations)
+                ->color('primary'),
         ];
+
+        if ($user && $user->isAdmin()) {
+            $upcomingEvents = (clone $eventsQuery)->where('date_start', '>=', $now)->count();
+
+            $cancelledRegistrations = Registration::query()->where('status', 'CANCELLED')->count();
+
+            $fullEvents = (clone $eventsQuery)
+                ->whereNotNull('max_participants')
+                ->whereRaw(
+                    "(select count(*) from registrations where events.id = registrations.event_id and status = 'REGISTERED' and is_attending = 1) >= max_participants"
+                )
+                ->count();
+
+            $remainingSeats = $totalCapacity > 0
+                ? max(0, $totalCapacity - $usedSeats)
+                : null;
+
+            $fullEventsColor = $fullEvents > 0 ? 'warning' : 'success';
+            $remainingSeatsColor = match (true) {
+                $remainingSeats === null => 'gray',
+                $remainingSeats === 0 => 'danger',
+                $remainingSeats <= 10 => 'warning',
+                default => 'success',
+            };
+
+            $stats = array_merge($stats, [
+                Stat::make('Evenements a venir', $upcomingEvents)
+                    ->color('info'),
+                Stat::make('Evenements complets', $fullEvents)
+                    ->color($fullEventsColor),
+                Stat::make('Places restantes', $remainingSeats === null ? '-' : $remainingSeats)
+                    ->color($remainingSeatsColor),
+                Stat::make('Annulations', $cancelledRegistrations)
+                    ->color($cancelledRegistrations > 0 ? 'warning' : 'success'),
+            ]);
+        }
+
+        return $stats;
     }
 }

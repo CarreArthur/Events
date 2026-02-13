@@ -184,4 +184,44 @@ class RegistrationController extends Controller
                 ->with('success', 'Inscription enregistrée avec succès ✅');
         });
     }
+
+    public function cancel(string $token)
+    {
+        $registration = Registration::where('invite_token', $token)->firstOrFail();
+        $event = $registration->event;
+
+        // Vérifier que l'inscription est bien enregistrée
+        if ($registration->status !== 'REGISTERED') {
+            return view('registrations.cancel-confirmed', [
+                'event' => $event,
+                'alreadyCancelled' => true,
+                'error' => null,
+            ]);
+        }
+
+        // Ne permettre l'annulation que pour les événements publics
+        if (!$event->is_public) {
+            return view('registrations.cancel-confirmed', [
+                'event' => $event,
+                'alreadyCancelled' => false,
+                'error' => "L'annulation n'est pas disponible pour les événements privés.",
+            ]);
+        }
+
+        // Annuler l'inscription principale
+        $registration->forceFill([
+            'status' => 'CANCELLED',
+        ])->save();
+
+        // Annuler également les invités associés
+        Registration::where('parent_registration_id', $registration->id)
+            ->where('status', 'REGISTERED')
+            ->update(['status' => 'CANCELLED']);
+
+        return view('registrations.cancel-confirmed', [
+            'event' => $event,
+            'alreadyCancelled' => false,
+            'error' => null,
+        ]);
+    }
 }

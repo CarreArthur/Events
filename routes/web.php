@@ -32,4 +32,7 @@ Route::get('/invites/{token}', [RegistrationController::class, 'invite'])
 
 Route::get('/invites/{token}/confirm', [RegistrationController::class, 'confirmInvite'])
     ->name('registrations.confirm');
+
+Route::get('/registrations/{token}/cancel', [RegistrationController::class, 'cancel'])
+    ->name('registrations.cancel');
  

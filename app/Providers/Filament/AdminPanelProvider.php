@@ -13,6 +13,8 @@ use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use App\Filament\Widgets\LatestRegistrations;
+use App\Filament\Widgets\FillRateGauge;
+use App\Filament\Widgets\CancellationRateGauge;
 use App\Filament\Widgets\RegistrationsOverview;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -42,6 +44,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                FillRateGauge::class,
+                CancellationRateGauge::class,
                 RegistrationsOverview::class,
                 LatestRegistrations::class,
             ])
