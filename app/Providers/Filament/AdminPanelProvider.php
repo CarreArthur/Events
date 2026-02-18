@@ -16,6 +16,8 @@ use App\Filament\Widgets\LatestRegistrations;
 use App\Filament\Widgets\FillRateGauge;
 use App\Filament\Widgets\CancellationRateGauge;
 use App\Filament\Widgets\RegistrationsOverview;
+use App\Filament\Widgets\EventsOverviewStats;
+use App\Filament\Widgets\UpcomingEventsTable;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -44,6 +46,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                EventsOverviewStats::class,
+                UpcomingEventsTable::class,
                 FillRateGauge::class,
                 CancellationRateGauge::class,
                 RegistrationsOverview::class,

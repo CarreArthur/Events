@@ -40,7 +40,7 @@ class CancellationRateGauge extends ChartWidget
         $data = $total > 0 ? [$cancelled, $registered] : [0, 1];
 
         return [
-            'labels' => ['Annulees', 'Actives'],
+            'labels' => ['Annulées', 'Actives'],
             'datasets' => [
                 [
                     'label' => 'Annulations',

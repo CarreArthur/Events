@@ -35,7 +35,7 @@ class LatestRegistrations extends TableWidget
             ->defaultPaginationPageOption(5)
             ->columns([
                 TextColumn::make('event.title')
-                    ->label('Evenement')
+                    ->label('Événement')
                     ->wrap(),
                 TextColumn::make('guest_name')
                     ->label('Nom')

@@ -28,7 +28,7 @@ class RegistrationsOverview extends StatsOverviewWidget
         $totalCapacity = (clone $eventsQuery)->whereNotNull('max_participants')->sum('max_participants');
 
         $stats = [
-            Stat::make('Evenements', $totalEvents)
+            Stat::make('Événements', $totalEvents)
                 ->color('info'),
             Stat::make('Inscriptions', $totalRegistrations)
                 ->color('primary'),
@@ -59,9 +59,9 @@ class RegistrationsOverview extends StatsOverviewWidget
             };
 
             $stats = array_merge($stats, [
-                Stat::make('Evenements a venir', $upcomingEvents)
+                Stat::make('Événements à venir', $upcomingEvents)
                     ->color('info'),
-                Stat::make('Evenements complets', $fullEvents)
+                Stat::make('Événements complets', $fullEvents)
                     ->color($fullEventsColor),
                 Stat::make('Places restantes', $remainingSeats === null ? '-' : $remainingSeats)
                     ->color($remainingSeatsColor),

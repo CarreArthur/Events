@@ -44,7 +44,7 @@ class FillRateGauge extends ChartWidget
         $data = $totalCapacity > 0 ? [$usedSeats, $remainingSeats] : [0, 1];
 
         return [
-            'labels' => ['Occupees', 'Restantes'],
+            'labels' => ['Occupées', 'Restantes'],
             'datasets' => [
                 [
                     'label' => 'Remplissage',
@@ -63,7 +63,7 @@ class FillRateGauge extends ChartWidget
             ->sum('max_participants');
 
         if ($totalCapacity === 0) {
-            return 'Aucune capacite definie';
+            return 'Aucune capacité définie';
         }
 
         $usedSeats = Registration::query()
