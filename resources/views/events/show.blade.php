@@ -43,6 +43,40 @@
                     {!! nl2br(e($event->description)) !!}
                 </div>
             </div>
+
+            {{-- Avis --}}
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold text-black">Avis</h2>
+                    @if($reviewsCount > 0)
+                        <p class="text-sm text-gray-600">
+                            Note moyenne : {{ $averageRating }}/5 ({{ $reviewsCount }})
+                        </p>
+                    @endif
+                </div>
+
+                @if($reviewsCount === 0)
+                    <div class="text-sm text-gray-600 border border-gray-200 p-6">
+                        Aucun avis pour le moment.
+                    </div>
+                @else
+                    <div class="space-y-6">
+                        @foreach($reviews as $review)
+                            <div class="border border-gray-200 p-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="text-sm font-semibold text-black">Note : {{ $review->rating }}/5</p>
+                                    <p class="text-xs text-gray-500">
+                                        {{ $review->created_at?->translatedFormat('d F Y') }}
+                                    </p>
+                                </div>
+                                <p class="text-sm text-gray-700">
+                                    {{ $review->comment ?: 'Aucun commentaire.' }}
+                                </p>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
 
         {{-- SIDEBAR --}}

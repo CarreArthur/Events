@@ -32,6 +32,7 @@ class RegistrationNotification extends Notification
             ->line("Date : " . optional($event->date_start)->translatedFormat('d F Y à H:i'))
             ->when(!empty($event->location), fn (MailMessage $m) => $m->line("Lieu : {$event->location}"))
             ->when(!empty($this->registration->dietary_info), fn (MailMessage $m) => $m->line("Contraintes alimentaires : {$this->registration->dietary_info}"))
+            ->line("Laisser un avis après l'événement : " . route('reviews.create', $this->registration->invite_token))
             ->action("Voir l'événement", url('/events/' . $event->slug));
 
         // Ajouter le bouton d'annulation uniquement pour les événements publics

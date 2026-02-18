@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Event;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Review;
 
 
 class Registration extends Model
@@ -28,6 +29,7 @@ class Registration extends Model
         'is_attending' => 'boolean',
         'email_sent_at' => 'datetime',
         'registered_at' => 'datetime',
+        'review_request_sent_at' => 'datetime',
     ];
 
     public function event()
@@ -43,6 +45,11 @@ class Registration extends Model
     public function guests()
     {
         return $this->hasMany(Registration::class, 'parent_registration_id');
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
     }
 
     public function routeNotificationForMail($notification = null): string

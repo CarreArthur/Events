@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -58,4 +59,10 @@ Route::get('/invites/{token}/confirm', [RegistrationController::class, 'confirmI
 
 Route::get('/registrations/{token}/cancel', [RegistrationController::class, 'cancel'])
     ->name('registrations.cancel');
+
+Route::get('/registrations/{token}/review', [ReviewController::class, 'create'])
+    ->name('reviews.create');
+
+Route::post('/registrations/{token}/review', [ReviewController::class, 'store'])
+    ->name('reviews.store');
  

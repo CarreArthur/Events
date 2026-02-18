@@ -23,7 +23,12 @@ public function show(Event $event): View
 {
     abort_if(! $event->is_public, 404);
 
-    return view('events.show', compact('event'));
+    $event->load(['reviews' => fn ($query) => $query->latest()]);
+    $reviews = $event->reviews;
+    $reviewsCount = $reviews->count();
+    $averageRating = $reviewsCount > 0 ? round($reviews->avg('rating'), 1) : null;
+
+    return view('events.show', compact('event', 'reviews', 'reviewsCount', 'averageRating'));
 }
 
 }
