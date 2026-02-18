@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\RegistrationController; // ✅ AJOUTE ÇA
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LogoutController;
 
 Route::get('/', function () {
     $latestEvents = \App\Models\Event::where('is_public', true)
@@ -16,6 +19,26 @@ Route::get('/', function () {
         'totalRegistrations' => \App\Models\Registration::count(),
     ]);
 });
+
+// ========== ROUTES D'AUTHENTIFICATION (publiques) ==========
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'show'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    
+    Route::get('/register', [RegisterController::class, 'show'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+});
+
+Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth')->name('logout');
+
+// ========== ROUTES PROTÉGÉES (authentification requise) ==========
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
+
+// ========== ROUTES PUBLIQUES (sans authentification) ==========
 
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 

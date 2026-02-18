@@ -20,7 +20,32 @@
             <nav class="flex items-center gap-12 text-sm font-medium">
                 <a href="{{ url('/') }}" class="text-gray-700 hover:text-black transition">Accueil</a>
                 <a href="{{ url('/events') }}" class="text-gray-700 hover:text-black transition">Événements</a>
-                <a href="{{ url('/admin') }}" class="text-gray-500 hover:text-gray-700 text-xs transition">Admin</a>
+                
+                @auth
+                    {{-- Utilisateur connecté --}}
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ url('/admin') }}" class="text-gray-700 hover:text-black transition">Admin</a>
+                    @else
+                        <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-black transition">Tableau de bord</a>
+                    @endif
+
+                    {{-- Menu utilisateur --}}
+                    <div class="flex items-center gap-4 border-l border-gray-200 pl-12">
+                        <span class="text-gray-700">{{ auth()->user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-gray-500 hover:text-red-700 transition">
+                                Déconnexion
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    {{-- Utilisateur non connecté --}}
+                    <div class="flex items-center gap-4 border-l border-gray-200 pl-12">
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-black transition">Connexion</a>
+                        <a href="{{ route('register') }}" class="bg-black text-white px-4 py-2 hover:bg-gray-800 transition">Inscription</a>
+                    </div>
+                @endauth
             </nav>
         </div>
     </header>

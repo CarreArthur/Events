@@ -31,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(false)  // ❌ Désactiver la page de login Filament
             ->colors([
                 'primary' => Color::Amber,
             ])
