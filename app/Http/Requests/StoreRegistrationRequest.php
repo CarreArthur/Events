@@ -12,6 +12,16 @@ class StoreRegistrationRequest extends FormRequest
         return true;
     }
 
+    public function messages(): array
+    {
+        return [
+            'guest_email.unique' => 'Cet email est déjà inscrit à cet événement.',
+            'guest_email.required' => 'L\'email est requis.',
+            'guest_email.email' => 'Veuillez entrer une adresse email valide.',
+            'guest_name.required' => 'Le nom est requis.',
+        ];
+    }
+
     public function rules(): array
     {
         $event = $this->route('event');
@@ -20,7 +30,15 @@ class StoreRegistrationRequest extends FormRequest
 
         return [
             'guest_name' => ['required', 'string', 'max:255'],
-            'guest_email' => ['required', 'email', 'max:255'],
+            'guest_email' => [
+                'required', 
+                'email', 
+                'max:255',
+                // ✅ Validation unique : empêcher les doublons d'emails pour le même événement
+                Rule::unique('registrations', 'guest_email')
+                    ->where(fn ($query) => $query->where('event_id', $event->id))
+                    ->where(fn ($query) => $query->where('status', '!=', 'CANCELLED')), // Ignorer les inscriptions annulées
+            ],
             'is_attending' => ['nullable', 'boolean'],
             'dietary_info' => ['nullable', 'string', 'max:2000'],
             'invite_token' => $isPrivate

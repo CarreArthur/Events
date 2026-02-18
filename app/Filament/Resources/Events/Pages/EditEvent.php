@@ -21,7 +21,15 @@ class EditEvent extends EditRecord
             Action::make('invite')
                 ->label('Envoyer une invitation')
                 ->icon('heroicon-o-paper-airplane')
-                ->visible(fn () => auth()->user()?->isAdmin() && ! $this->record->is_public)
+                ->visible(function (): bool {
+                    $user = auth()->user();
+
+                    if (! $user || $this->record->is_public) {
+                        return false;
+                    }
+
+                    return $user->isAdmin() || (int) $this->record->user_id === (int) $user->id;
+                })
                 ->form([
                     TextInput::make('guest_email')
                         ->label('Email de l\'invite')
